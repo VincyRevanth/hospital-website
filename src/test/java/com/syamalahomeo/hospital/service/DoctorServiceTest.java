@@ -1,16 +1,22 @@
 package com.syamalahomeo.hospital.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
+@ActiveProfiles("test")
 class DoctorServiceTest {
 
-    private final DoctorService service = new DoctorService();
+    @Autowired
+    private DoctorService service;
 
     @Test
-    void returnsBothDoctors() {
+    void returnsBothSeededDoctors() {
         assertEquals(2, service.findAll().size());
     }
 
