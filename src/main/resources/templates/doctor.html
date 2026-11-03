@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${doctor.name} + ' | ' + ${hospital.name}, 'Profile of ' + ${doctor.name} + ' at ' + ${hospital.name} + '.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${doctor.name}">Doctor name</h1>
+            <p class="lead mb-0" th:text="${doctor.qualification}">Qualification</p>
+        </div>
+    </section>
+    <section class="section-pad">
+        <div class="container">
+            <p class="placeholder-note" th:text="${doctor.bio}">Bio</p>
+            <p class="placeholder-note">Registration number: [to be supplied]</p>
+            <a class="btn btn-teal" th:href="@{/contact}">Request an Appointment</a>
+            <a class="btn btn-outline-teal ms-2" th:href="@{/doctors}">All doctors</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

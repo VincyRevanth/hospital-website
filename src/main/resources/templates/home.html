@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Home | SYAMALA HOMEO HOSPITAL', 'Homeopathy hospital. Request an appointment online. [Description to be finalised with real details]')}"></head>
+<head th:replace="~{fragments/layout :: head('Home | ' + ${hospital.name}, 'Homeopathy hospital. Request an appointment online. [Description to be finalised with real details]')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
@@ -41,17 +41,20 @@
         </div>
     </section>
 
-    <section id="doctors" class="section-pad">
-        <div class="container">
-            <h2 class="mb-4">Our Doctors</h2>
-            <div class="row g-4">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card card-soft p-3"><h3 class="h5">[Doctor name]</h3>
-                        <p class="placeholder-note mb-0">[Qualifications and registration number to be supplied]</p></div>
-                </div>
-            </div>
-        </div>
-    </section>
+	<section id="doctors" class="section-pad">
+	    <div class="container">
+	        <h2 class="mb-4">Our Doctors</h2>
+	        <div class="row g-4">
+	            <div class="col-12 col-md-6" th:each="d : ${doctors}">
+	                <div class="card card-soft p-3">
+	                    <h3 class="h5" th:text="${d.name}">Doctor name</h3>
+	                    <p class="mb-2" th:text="${d.qualification}">Qualification</p>
+	                    <a th:href="@{/doctors/{slug}(slug=${d.slug})}">View profile</a>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</section>
 
     <section id="faq" class="section-pad bg-mist">
         <div class="container">
@@ -75,9 +78,7 @@
     <section id="contact" class="section-pad">
         <div class="container">
             <h2>Contact and Directions</h2>
-            <p class="placeholder-note mb-1">Address: [to be supplied]</p>
-            <p class="placeholder-note mb-1">Phone: [to be supplied]</p>
-            <p class="placeholder-note mb-1">Email: [to be supplied]</p>
+                        <p class="mb-1">Phone: <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a></p>
             <p class="placeholder-note">Opening hours: [to be supplied]</p>
             <p>The online appointment form arrives in Milestone 6.</p>
         </div>

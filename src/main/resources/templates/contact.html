@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Contact Us | ' + ${hospital.name}, 'Contact ' + ${hospital.name} + ' by phone or visit us.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Contact Us</h1></div></section>
+    <section class="section-pad">
+        <div class="container">
+            <dl class="row">
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9"><a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a></dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9 placeholder-note" th:text="${hospital.email}">Email</dd>
+                <dt class="col-sm-3">Address</dt>
+                <dd class="col-sm-9 placeholder-note" th:text="${hospital.address}">Address</dd>
+                <dt class="col-sm-3">Opening hours</dt>
+                <dd class="col-sm-9 placeholder-note" th:text="${hospital.openingHours}">Hours</dd>
+                <dt class="col-sm-3">Directions</dt>
+                <dd class="col-sm-9 placeholder-note">[Map link to be added once the address is supplied]</dd>
+            </dl>
+            <p>Online appointment requests and the contact form arrive in Milestones 5 and 6. For now, please call us.</p>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

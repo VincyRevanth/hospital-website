@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Our Doctors | ' + ${hospital.name}, 'Meet the doctors at ' + ${hospital.name} + '.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Our Doctors</h1></div></section>
+    <section class="section-pad">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-6" th:each="d : ${doctors}">
+                    <div class="card card-soft p-4">
+                        <div class="doctor-avatar" aria-hidden="true">Dr</div>
+                        <h2 class="h4 mt-3" th:text="${d.name}">Doctor name</h2>
+                        <p class="mb-3" th:text="${d.qualification}">Qualification</p>
+                        <div><a class="btn btn-outline-teal" th:href="@{/doctors/{slug}(slug=${d.slug})}"
+                                th:attr="aria-label='View profile of ' + ${d.name}">View profile</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

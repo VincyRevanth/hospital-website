@@ -1,36 +1,61 @@
 :root {
-    --teal: #0f766e;
-    --teal-dark: #115e59;
-    --green-deep: #14532d;
-    --mist: #f0fdfa;
+    --navy: #1b2f6e;
+    --navy-dark: #12204d;
+    --gold: #f2b230;
+    --gold-dark: #d99a14;
+    --mist: #eef4fb;
+    --line: #cfdcee;
     --ink: #1f2937;
 }
+
 body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: var(--ink); background: #fff; }
-h1, h2, h3 { color: var(--green-deep); font-weight: 700; }
-a { color: var(--teal-dark); }
+h1, h2, h3 { color: var(--navy); font-weight: 700; }
+a { color: var(--navy); }
+a:hover { color: var(--navy-dark); }
 section { scroll-margin-top: 80px; }
 
-.skip-link { position: absolute; left: -999px; top: 0; background: var(--green-deep); color: #fff; padding: .5rem 1rem; z-index: 2000; }
-.skip-link:focus { left: 0; }
+.skip-link { position: absolute; left: -999px; top: 0; background: var(--navy); color: #fff; padding: .5rem 1rem; z-index: 2000; }
+.skip-link:focus { left: 0; color: #fff; }
 
-.brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--green-deep); }
-.brand-mark { display: inline-flex; width: 2.2rem; height: 2.2rem; align-items: center; justify-content: center;
-              background: var(--teal); color: #fff; border-radius: 50%; }
+/* Navigation */
+.navbar { border-bottom: 3px solid var(--gold) !important; }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--navy); }
+.brand-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.navbar .nav-link { color: var(--navy); font-weight: 500; }
+.navbar .nav-link:hover, .navbar .nav-link:focus { color: var(--navy-dark); text-decoration: underline; text-decoration-color: var(--gold); text-underline-offset: 6px; }
 
-.btn-teal { background: var(--teal); color: #fff; border: 0; }
-.btn-teal:hover, .btn-teal:focus { background: var(--teal-dark); color: #fff; }
-.btn-outline-teal { border: 2px solid var(--teal); color: var(--teal-dark); }
-.btn-outline-teal:hover { background: var(--teal); color: #fff; }
+/* Buttons (class names kept for compatibility) */
+.btn-teal { background: var(--navy); color: #fff; border: 2px solid var(--navy); }
+.btn-teal:hover, .btn-teal:focus { background: var(--navy-dark); border-color: var(--navy-dark); color: #fff; }
+.btn-outline-teal { background: transparent; border: 2px solid var(--navy); color: var(--navy); }
+.btn-outline-teal:hover, .btn-outline-teal:focus { background: var(--navy); color: #fff; }
+.btn-gold { background: var(--gold); color: var(--navy-dark); border: 2px solid var(--gold); font-weight: 600; }
+.btn-gold:hover, .btn-gold:focus { background: var(--gold-dark); border-color: var(--gold-dark); color: var(--navy-dark); }
 
-.hero { background: linear-gradient(135deg, var(--mist), #ffffff); padding: 5rem 0; }
+/* Hero and sections */
+.hero { background: linear-gradient(135deg, var(--mist), #ffffff); padding: 5rem 0; border-bottom: 1px solid var(--line); }
+.hero h1 { position: relative; padding-bottom: .75rem; }
+.hero h1::after { content: ""; position: absolute; left: 0; bottom: 0; width: 5rem; height: 4px; background: var(--gold); border-radius: 2px; }
 .hero p.lead { max-width: 38rem; }
 
 .section-pad { padding: 4rem 0; }
 .bg-mist { background: var(--mist); }
-.card-soft { border: 1px solid #d1e7e4; border-radius: .75rem; height: 100%; }
+.card-soft { border: 1px solid var(--line); border-top: 4px solid var(--gold); border-radius: .75rem; height: 100%; }
 .placeholder-note { font-style: italic; color: #4b5563; }
 
-.site-footer { background: var(--green-deep); color: #fff; }
-.site-footer a { color: #fff; }
+.page-header { background: var(--mist); padding: 3rem 0; border-bottom: 1px solid var(--line); }
+.doctor-avatar { width: 4rem; height: 4rem; border-radius: 50%; background: var(--navy); color: var(--gold);
+                 display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.25rem; }
 
-:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+/* FAQ accordion (override Bootstrap's default blue) */
+.accordion-button:not(.collapsed) { background: var(--mist); color: var(--navy); box-shadow: none; }
+.accordion-button:focus { border-color: var(--navy); box-shadow: 0 0 0 .2rem rgba(27, 47, 110, .25); }
+
+/* Footer */
+.site-footer { background: var(--navy); color: #fff; border-top: 4px solid var(--gold); }
+.site-footer a { color: #fff; }
+.site-footer a:hover, .site-footer a:focus { color: var(--gold); }
+
+/* Keyboard focus: visible on light and dark backgrounds */
+:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+.site-footer :focus-visible, .skip-link:focus-visible { outline-color: var(--gold); }

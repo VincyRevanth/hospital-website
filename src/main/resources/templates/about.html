@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('About Us | ' + ${hospital.name}, 'About ' + ${hospital.name} + ', a homeopathy hospital.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>About Us</h1></div></section>
+    <section class="section-pad">
+        <div class="container">
+            <p>Established: <span th:text="${hospital.establishedYear}">1996</span>
+                <span class="placeholder-note">(taken from the hospital logo; please confirm)</span></p>
+            <p class="placeholder-note">[Hospital history, approach, mission and registration details to be supplied by the hospital.]</p>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

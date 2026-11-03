@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Treatments and Services | ' + ${hospital.name}, 'Treatments and services at ' + ${hospital.name} + '.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Treatments and Services</h1></div></section>
+    <section class="section-pad">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card card-soft p-3"><h2 class="h5">[Service 1]</h2>
+                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card card-soft p-3"><h2 class="h5">[Service 2]</h2>
+                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card card-soft p-3"><h2 class="h5">[Service 3]</h2>
+                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
+                </div>
+            </div>
+            <p class="mt-4 small">The information on this website is general and is not a substitute for
+                professional medical advice. Please consult a qualified doctor about your health.</p>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
