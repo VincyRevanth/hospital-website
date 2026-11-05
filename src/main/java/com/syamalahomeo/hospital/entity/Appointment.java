@@ -1,5 +1,6 @@
 package com.syamalahomeo.hospital.entity;
 
+import com.syamalahomeo.hospital.exception.InvalidStatusTransitionException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Version;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 @Entity
 @Table(name = "appointment")
@@ -47,28 +49,66 @@ public class Appointment extends BaseEntity {
     @Column(nullable = false, length = 20)
     private AppointmentStatus status = AppointmentStatus.PENDING;
 
+    /** Set only while CONFIRMED; the UNIQUE constraint blocks double-booking. */
+    @Column(name = "confirmed_slot_key", length = 60)
+    private String confirmedSlotKey;
+
     @Version
     private long version;
 
     protected Appointment() { }
 
+    public Appointment(String patientName, String phone, String email, Doctor doctor,
+                       ServiceOffering service, LocalDate preferredDate,
+                       LocalTime preferredTime, String message) {
+        this.patientName = patientName;
+        this.phone = phone;
+        this.email = email;
+        this.doctor = doctor;
+        this.service = service;
+        this.preferredDate = preferredDate;
+        this.preferredTime = preferredTime;
+        this.message = message;
+    }
+
+    public static String slotKey(Doctor doctor, LocalDate date, LocalTime time) {
+        return doctor.getId() + ":" + date + ":" + time;
+    }
+
+    public void confirm() {
+        requireStatus("confirm", AppointmentStatus.PENDING);
+        this.status = AppointmentStatus.CONFIRMED;
+        if (doctor != null) {
+            this.confirmedSlotKey = slotKey(doctor, preferredDate, preferredTime);
+        }
+    }
+
+    public void reject() {
+        requireStatus("reject", AppointmentStatus.PENDING);
+        this.status = AppointmentStatus.REJECTED;
+    }
+
+    public void cancel() {
+        requireStatus("cancel", AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED);
+        this.status = AppointmentStatus.CANCELLED;
+        this.confirmedSlotKey = null;
+    }
+
+    private void requireStatus(String action, AppointmentStatus... allowed) {
+        if (!Arrays.asList(allowed).contains(status)) {
+            throw new InvalidStatusTransitionException(
+                    "Cannot " + action + " an appointment that is " + status);
+        }
+    }
+
     public String getPatientName() { return patientName; }
-    public void setPatientName(String patientName) { this.patientName = patientName; }
     public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
     public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
     public Doctor getDoctor() { return doctor; }
-    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
     public ServiceOffering getService() { return service; }
-    public void setService(ServiceOffering service) { this.service = service; }
     public LocalDate getPreferredDate() { return preferredDate; }
-    public void setPreferredDate(LocalDate preferredDate) { this.preferredDate = preferredDate; }
     public LocalTime getPreferredTime() { return preferredTime; }
-    public void setPreferredTime(LocalTime preferredTime) { this.preferredTime = preferredTime; }
     public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
     public AppointmentStatus getStatus() { return status; }
-    public void setStatus(AppointmentStatus status) { this.status = status; }
     public long getVersion() { return version; }
 }

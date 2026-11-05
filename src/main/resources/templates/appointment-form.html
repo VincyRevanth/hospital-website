@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Request an Appointment | ' + ${hospital.name}, 'Request an appointment at ' + ${hospital.name} + '. Requests are confirmed by the hospital.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Request an Appointment</h1></div></section>
+    <section class="section-pad">
+        <div class="container" style="max-width: 720px;">
+
+            <div class="alert alert-info" role="note">
+                This form sends a <strong>request</strong>. It is not a confirmed appointment.
+                The hospital will contact you to confirm.
+            </div>
+
+            <form id="appointmentForm" th:action="@{/appointments}" th:object="${appointmentRequest}" method="post" novalidate>
+
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                    <p class="mb-1"><strong>Please correct the following:</strong></p>
+                    <ul class="mb-0">
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li>
+                    </ul>
+                </div>
+
+                <div class="mb-3">
+                    <label for="patientName" class="form-label">Patient name <span aria-hidden="true">*</span></label>
+                    <input type="text" id="patientName" th:field="*{patientName}" class="form-control"
+                           th:classappend="${#fields.hasErrors('patientName')} ? 'is-invalid'"
+                           maxlength="100" autocomplete="name" required>
+                    <div class="invalid-feedback" th:errors="*{patientName}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Mobile number <span aria-hidden="true">*</span></label>
+                    <input type="tel" id="phone" th:field="*{phone}" class="form-control"
+                           th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'"
+                           inputmode="tel" autocomplete="tel" aria-describedby="phoneHelp" required>
+                    <div id="phoneHelp" class="form-text">10-digit Indian mobile number.</div>
+                    <div class="invalid-feedback" th:errors="*{phone}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email (optional)</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                           maxlength="150" autocomplete="email">
+                    <div class="invalid-feedback" th:errors="*{email}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="doctorId" class="form-label">Doctor</label>
+                    <select id="doctorId" th:field="*{doctorId}" class="form-select" aria-describedby="chooseHelp">
+                        <option value="">No preference</option>
+                        <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.name}">Doctor</option>
+                    </select>
+                </div>
+
+                <div class="mb-3" th:if="${!services.isEmpty()}">
+                    <label for="serviceId" class="form-label">Service</label>
+                    <select id="serviceId" th:field="*{serviceId}" class="form-select">
+                        <option value="">No preference</option>
+                        <option th:each="s : ${services}" th:value="${s.id}" th:text="${s.name}">Service</option>
+                    </select>
+                </div>
+                <p id="chooseHelp" class="form-text mb-3">Please choose at least one of doctor or service.</p>
+
+                <div class="row">
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="preferredDate" class="form-label">Preferred date <span aria-hidden="true">*</span></label>
+                        <input type="date" id="preferredDate" th:field="*{preferredDate}" class="form-control"
+                               th:classappend="${#fields.hasErrors('preferredDate')} ? 'is-invalid'"
+                               th:attr="min=${minDate},max=${maxDate}" required>
+                        <div class="invalid-feedback" th:errors="*{preferredDate}"></div>
+                    </div>
+                    <div class="col-12 col-md-6 mb-3">
+                        <label for="preferredTime" class="form-label">Preferred time <span aria-hidden="true">*</span></label>
+                        <select id="preferredTime" th:field="*{preferredTime}" class="form-select"
+                                th:classappend="${#fields.hasErrors('preferredTime')} ? 'is-invalid'" required>
+                            <option value="">Choose a time</option>
+                            <option th:each="s : ${slots}" th:value="${s}" th:text="${s}">09:00</option>
+                        </select>
+                        <div class="invalid-feedback" th:errors="*{preferredTime}"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="message" class="form-label">Short message (optional)</label>
+                    <textarea id="message" th:field="*{message}" class="form-control"
+                              th:classappend="${#fields.hasErrors('message')} ? 'is-invalid'"
+                              rows="3" maxlength="500" aria-describedby="messageHelp"></textarea>
+                    <div id="messageHelp" class="form-text">
+                        Please do not include medical history or sensitive details here.
+                    </div>
+                    <div class="invalid-feedback" th:errors="*{message}"></div>
+                </div>
+
+                <!-- Honeypot: hidden from people, filled in by bots -->
+                <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                    <label for="website">Leave this field empty</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                </div>
+
+                <p class="small">We collect only what is needed to handle your request.
+                    <span class="placeholder-note">[Privacy policy page coming soon]</span></p>
+
+                <button type="submit" class="btn btn-teal btn-lg">Send request</button>
+            </form>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+<script th:src="@{/js/appointment-form.js}"></script>
+</body>
+</html>

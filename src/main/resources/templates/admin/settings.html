@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Contact details')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad" style="max-width: 720px;">
+    <h1 class="h3 mb-3">Contact details and opening hours</h1>
+    <div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+    <p class="small">These appear on the Contact page and across the site. Leave a field blank to show the placeholder.</p>
+    <form th:action="@{/admin/settings}" th:object="${form}" method="post" novalidate>
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+            <ul class="mb-0"><li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li></ul>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="tel" id="phone" th:field="*{phone}" class="form-control"
+                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'" maxlength="20">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control"
+                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'" maxlength="150">
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" th:field="*{address}" class="form-control" rows="3" maxlength="500"
+                      th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="openingHours" class="form-label">Opening hours</label>
+            <textarea id="openingHours" th:field="*{openingHours}" class="form-control" rows="3" maxlength="500"
+                      th:classappend="${#fields.hasErrors('openingHours')} ? 'is-invalid'"></textarea>
+        </div>
+        <div class="mb-4">
+            <label for="mapUrl" class="form-label">Directions link (Google Maps, https://...)</label>
+            <input type="url" id="mapUrl" th:field="*{mapUrl}" class="form-control"
+                   th:classappend="${#fields.hasErrors('mapUrl')} ? 'is-invalid'" maxlength="500">
+        </div>
+        <button type="submit" class="btn btn-teal">Save</button>
+    </form>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

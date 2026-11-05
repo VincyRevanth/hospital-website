@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Appointments')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad">
+    <h1 class="h3 mb-3">Appointment requests</h1>
+
+    <div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+    <form method="get" th:action="@{/admin/appointments}" class="row g-2 align-items-end mb-4">
+        <div class="col-12 col-md-4">
+            <label for="status" class="form-label">Status</label>
+            <select id="status" name="status" class="form-select">
+                <option value="">All</option>
+                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"
+                        th:selected="${s == selectedStatus}">PENDING</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-4">
+            <label for="date" class="form-label">Requested date</label>
+            <input type="date" id="date" name="date" class="form-control" th:value="${selectedDate}">
+        </div>
+        <div class="col-12 col-md-4">
+            <button type="submit" class="btn btn-teal">Filter</button>
+            <a class="btn btn-outline-teal ms-1" th:href="@{/admin/appointments}">Clear</a>
+        </div>
+    </form>
+
+    <p th:if="${appointments.isEmpty()}">No appointments match.</p>
+
+    <div class="table-responsive" th:unless="${appointments.isEmpty()}">
+        <table class="table table-sm align-middle">
+            <thead>
+            <tr>
+                <th scope="col">Ref</th><th scope="col">Patient</th><th scope="col">For</th>
+                <th scope="col">Date</th><th scope="col">Time</th><th scope="col">Status</th>
+                <th scope="col">Message</th><th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${appointments}">
+                <td th:text="${a.id()}">1</td>
+                <td>
+                    <div th:text="${a.patientName()}">Name</div>
+                    <div class="small"><a th:href="'tel:' + ${a.phone()}" th:text="${a.phone()}">phone</a></div>
+                    <div class="small" th:if="${a.email() != null}" th:text="${a.email()}">email</div>
+                </td>
+                <td>
+                    <div th:if="${a.doctorName() != null}" th:text="${a.doctorName()}">Doctor</div>
+                    <div class="small" th:if="${a.serviceName() != null}" th:text="${a.serviceName()}">Service</div>
+                </td>
+                <td th:text="${a.preferredDate()}">date</td>
+                <td th:text="${a.preferredTime()}">time</td>
+                <td>
+                    <span class="badge"
+                          th:text="${a.status()}"
+                          th:classappend="${a.status() == 'CONFIRMED'} ? 'text-bg-success' : (${a.status() == 'PENDING'} ? 'text-bg-warning' : 'text-bg-secondary')">STATUS</span>
+                </td>
+                <td class="small" th:text="${a.message()}">message</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-1">
+                        <form th:if="${a.status() == 'PENDING'}" method="post"
+                              th:action="@{/admin/appointments/{id}/confirm(id=${a.id()})}">
+                            <input type="hidden" name="returnStatus" th:value="${selectedStatusText}">
+                            <input type="hidden" name="returnDate" th:value="${selectedDate}">
+                            <button type="submit" class="btn btn-sm btn-teal">Confirm</button>
+                        </form>
+                        <form th:if="${a.status() == 'PENDING'}" method="post"
+                              th:action="@{/admin/appointments/{id}/reject(id=${a.id()})}">
+                            <input type="hidden" name="returnStatus" th:value="${selectedStatusText}">
+                            <input type="hidden" name="returnDate" th:value="${selectedDate}">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Reject</button>
+                        </form>
+                        <form th:if="${a.status() == 'PENDING' or a.status() == 'CONFIRMED'}" method="post"
+                              th:action="@{/admin/appointments/{id}/cancel(id=${a.id()})}">
+                            <input type="hidden" name="returnStatus" th:value="${selectedStatusText}">
+                            <input type="hidden" name="returnDate" th:value="${selectedDate}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Cancel</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

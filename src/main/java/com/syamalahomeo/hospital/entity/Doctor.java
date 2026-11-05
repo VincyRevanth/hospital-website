@@ -49,6 +49,12 @@ public class Doctor extends BaseEntity {
     private boolean active = true;
 
     protected Doctor() { }
+    
+    public Doctor(String slug, String fullName, String qualification) {
+        this.slug = slug;
+        this.fullName = fullName;
+        this.qualification = qualification;
+    }
 
     public String getSlug() { return slug; }
     public void setSlug(String slug) { this.slug = slug; }

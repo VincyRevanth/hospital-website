@@ -11,4 +11,6 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findByActiveTrueOrderByDisplayOrderAscFullNameAsc();
 
     Optional<Doctor> findBySlugAndActiveTrue(String slug);
+
+    boolean existsBySlug(String slug);
 }

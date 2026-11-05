@@ -9,7 +9,7 @@
         <div class="container">
             <h1 class="display-5" th:text="${hospitalName}">HOSPITAL</h1>
             <p class="lead">Caring homeopathic consultation. [Tagline placeholder: to be supplied]</p>
-            <a class="btn btn-teal btn-lg me-2" href="#contact">Request an Appointment</a>
+            <a class="btn btn-teal btn-lg me-2" th:href="@{/appointments/new}">Request an Appointment</a>
             <a class="btn btn-outline-teal btn-lg" href="#services">Our Services</a>
         </div>
     </section>
@@ -24,20 +24,16 @@
     <section id="services" class="section-pad bg-mist">
         <div class="container">
             <h2 class="mb-4">Treatments and Services</h2>
-            <div class="row g-4">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card card-soft p-3"><h3 class="h5">[Service 1]</h3>
-                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card card-soft p-3"><h3 class="h5">[Service 2]</h3>
-                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card card-soft p-3"><h3 class="h5">[Service 3]</h3>
-                        <p class="placeholder-note mb-0">[Description to be supplied]</p></div>
-                </div>
-            </div>
+			<div class="row g-4">
+			    <div class="col-12 col-md-6 col-lg-4" th:each="s : ${services}">
+			        <div class="card card-soft p-3">
+			            <h3 class="h5" th:text="${s.name}">Service</h3>
+			            <p class="mb-0" th:if="${s.description != null}" th:text="${s.description}">Description</p>
+			        </div>
+			    </div>
+			</div>
+			<p class="placeholder-note" th:if="${services.isEmpty()}">
+			    [Services will be listed here once the hospital adds them.]</p>
         </div>
     </section>
 

@@ -13,8 +13,10 @@
     <section class="section-pad">
         <div class="container">
             <p class="placeholder-note" th:text="${doctor.bio}">Bio</p>
-            <p class="placeholder-note">Registration number: [to be supplied]</p>
-            <a class="btn btn-teal" th:href="@{/contact}">Request an Appointment</a>
+			<p th:if="${doctor.registrationNumber != null}">Registration number:
+			    <span th:text="${doctor.registrationNumber}">123</span></p>
+			<p class="placeholder-note" th:if="${doctor.registrationNumber == null}">Registration number: [to be supplied]</p>
+            <a class="btn btn-teal" th:href="@{/appointments/new}">Request an Appointment</a>
             <a class="btn btn-outline-teal ms-2" th:href="@{/doctors}">All doctors</a>
         </div>
     </section>

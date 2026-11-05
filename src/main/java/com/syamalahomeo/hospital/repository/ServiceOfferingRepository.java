@@ -8,4 +8,8 @@ import java.util.List;
 public interface ServiceOfferingRepository extends JpaRepository<ServiceOffering, Long> {
 
     List<ServiceOffering> findByActiveTrueOrderByDisplayOrderAscNameAsc();
+
+    boolean existsByNameIgnoreCase(String name);
+
+    boolean existsByNameIgnoreCaseAndIdNot(String name, Long id);
 }

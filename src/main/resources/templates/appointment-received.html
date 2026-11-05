@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Request Received | ' + ${hospital.name}, 'Your appointment request has been received.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Request Received</h1></div></section>
+    <section class="section-pad">
+        <div class="container" style="max-width: 720px;">
+            <div class="alert alert-success" role="status">
+                Thank you. Your request has been received.
+                It is <strong>not a confirmed appointment</strong> yet.
+                The hospital will contact you to confirm, change or decline it.
+            </div>
+            <dl class="row" th:if="${appointment != null}">
+                <dt class="col-sm-4">Reference</dt>
+                <dd class="col-sm-8" th:text="${appointment.reference()}">1</dd>
+                <dt class="col-sm-4" th:if="${appointment.doctorName() != null}">Doctor</dt>
+                <dd class="col-sm-8" th:if="${appointment.doctorName() != null}" th:text="${appointment.doctorName()}">Doctor</dd>
+                <dt class="col-sm-4" th:if="${appointment.serviceName() != null}">Service</dt>
+                <dd class="col-sm-8" th:if="${appointment.serviceName() != null}" th:text="${appointment.serviceName()}">Service</dd>
+                <dt class="col-sm-4">Requested date</dt>
+                <dd class="col-sm-8" th:text="${appointment.preferredDate()}">Date</dd>
+                <dt class="col-sm-4">Requested time</dt>
+                <dd class="col-sm-8" th:text="${appointment.preferredTime()}">Time</dd>
+            </dl>
+            <p>For urgent matters, please call
+                <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a>.</p>
+            <a class="btn btn-outline-teal" th:href="@{/}">Back to home</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

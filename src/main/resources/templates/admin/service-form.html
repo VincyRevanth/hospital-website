@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead(${pageTitle})}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad" style="max-width: 720px;">
+    <h1 class="h3 mb-3" th:text="${pageTitle}">Service</h1>
+    <div class="alert alert-info" role="note">
+        Describe services factually. Do not state cure rates or promise results.
+    </div>
+    <form th:action="@{${formAction}}" th:object="${form}" method="post" novalidate>
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+            <ul class="mb-0"><li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li></ul>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Service name *</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control"
+                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'" maxlength="150" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" th:field="*{description}" class="form-control" rows="5" maxlength="2000"
+                      th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="displayOrder" class="form-label">Display order (lower shows first) *</label>
+            <input type="number" id="displayOrder" th:field="*{displayOrder}" class="form-control"
+                   th:classappend="${#fields.hasErrors('displayOrder')} ? 'is-invalid'" min="0" max="1000" required>
+        </div>
+        <div class="form-check mb-4">
+            <input type="checkbox" id="active" th:field="*{active}" class="form-check-input">
+            <label for="active" class="form-check-label">Show on the public website</label>
+        </div>
+        <button type="submit" class="btn btn-teal">Save</button>
+        <a class="btn btn-outline-teal ms-2" th:href="@{/admin/services}">Cancel</a>
+    </form>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

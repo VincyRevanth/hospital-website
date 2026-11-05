@@ -11,15 +11,19 @@
                 <dt class="col-sm-3">Phone</dt>
                 <dd class="col-sm-9"><a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a></dd>
                 <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9 placeholder-note" th:text="${hospital.email}">Email</dd>
+                <dd class="col-sm-9" th:text="${hospital.email}">Email</dd>
                 <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9 placeholder-note" th:text="${hospital.address}">Address</dd>
+                <dd class="col-sm-9" style="white-space: pre-line;" th:text="${hospital.address}">Address</dd>
                 <dt class="col-sm-3">Opening hours</dt>
-                <dd class="col-sm-9 placeholder-note" th:text="${hospital.openingHours}">Hours</dd>
+                <dd class="col-sm-9" style="white-space: pre-line;" th:text="${hospital.openingHours}">Hours</dd>
                 <dt class="col-sm-3">Directions</dt>
-                <dd class="col-sm-9 placeholder-note">[Map link to be added once the address is supplied]</dd>
+                <dd class="col-sm-9">
+                    <a th:if="${hospital.mapUrl != null}" th:href="${hospital.mapUrl}"
+                       target="_blank" rel="noopener noreferrer">Open in maps</a>
+                    <span class="placeholder-note" th:if="${hospital.mapUrl == null}">[Map link to be added]</span>
+                </dd>
             </dl>
-            <p>Online appointment requests and the contact form arrive in Milestones 5 and 6. For now, please call us.</p>
+            <p>To book, <a th:href="@{/appointments/new}">request an appointment online</a> or call us.</p>
         </div>
     </section>
 </main>

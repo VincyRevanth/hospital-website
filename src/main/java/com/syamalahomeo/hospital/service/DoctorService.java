@@ -32,6 +32,8 @@ public class DoctorService {
 
     private DoctorView toView(Doctor d) {
         String bio = (d.getBio() == null || d.getBio().isBlank()) ? BIO_PLACEHOLDER : d.getBio();
-        return new DoctorView(d.getSlug(), d.getFullName(), d.getQualification(), bio);
+        String reg = (d.getRegistrationNumber() == null || d.getRegistrationNumber().isBlank())
+                ? null : d.getRegistrationNumber();
+        return new DoctorView(d.getId(), d.getSlug(), d.getFullName(), d.getQualification(), bio, reg);
     }
 }
