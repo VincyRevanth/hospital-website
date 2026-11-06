@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Page not found | ' + ${hospital.name}, 'The page you were looking for was not found.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="section-pad">
+        <div class="container text-center" style="max-width: 640px;">
+            <h1>Page not found</h1>
+            <p>Sorry, we could not find that page. It may have moved or the address may be incorrect.</p>
+            <a class="btn btn-teal" th:href="@{/}">Back to home</a>
+            <a class="btn btn-outline-teal ms-2" th:href="@{/doctors}">Our doctors</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

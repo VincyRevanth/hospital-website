@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Messages')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad">
+    <h1 class="h3 mb-3">Contact messages</h1>
+    <p class="small">Latest 100 messages. Contains personal data: do not share or copy it elsewhere.</p>
+    <p th:if="${messages.isEmpty()}">No messages yet.</p>
+    <div class="table-responsive" th:unless="${messages.isEmpty()}">
+        <table class="table table-sm align-middle">
+            <thead><tr><th scope="col">Received</th><th scope="col">Name</th>
+                <th scope="col">Contact</th><th scope="col">Message</th></tr></thead>
+            <tbody>
+            <tr th:each="m : ${messages}">
+                <td th:text="${m.receivedAt()}">date</td>
+                <td th:text="${m.name()}">name</td>
+                <td>
+                    <div th:if="${m.phone() != null}"><a th:href="'tel:' + ${m.phone()}" th:text="${m.phone()}">phone</a></div>
+                    <div th:if="${m.email() != null}" th:text="${m.email()}">email</div>
+                </td>
+                <td style="white-space: pre-line;" th:text="${m.message()}">message</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

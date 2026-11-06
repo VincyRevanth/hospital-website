@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="faqList" class="accordion" id="faqList">
+
+    <div class="accordion-item">
+        <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                Is an online appointment request a confirmed appointment?
+            </button>
+        </h3>
+        <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqList">
+            <div class="accordion-body">
+                No. The form sends a request only. The hospital will contact you to confirm, change or decline it.
+                For anything urgent, please call
+                <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">phone</a>.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                What information do I need to give?
+            </button>
+        </h3>
+        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqList">
+            <div class="accordion-body">
+                Your name, mobile number, a doctor or service, and a preferred date and time. Email and a short
+                message are optional. Please do not put your medical history in the message.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                What should I do in a medical emergency?
+            </button>
+        </h3>
+        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqList">
+            <div class="accordion-body">
+                This website is not for emergencies. Please contact your local emergency services or go to the
+                nearest emergency facility.
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h3 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                [More questions: to be supplied by the hospital]
+            </button>
+        </h3>
+        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqList">
+            <div class="accordion-body placeholder-note">
+                [Answers to be written and reviewed by the hospital. Avoid cure claims and success rates.]
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

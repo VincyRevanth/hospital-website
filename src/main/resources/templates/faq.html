@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('FAQ | ' + ${hospital.name}, 'Frequently asked questions about appointments at ' + ${hospital.name} + '.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="page-header"><div class="container"><h1>Frequently Asked Questions</h1></div></section>
+    <section class="section-pad">
+        <div class="container">
+            <div th:replace="~{fragments/faq :: faqList}"></div>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

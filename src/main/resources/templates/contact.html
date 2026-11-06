@@ -1,29 +1,86 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Contact Us | ' + ${hospital.name}, 'Contact ' + ${hospital.name} + ' by phone or visit us.')}"></head>
+<head th:replace="~{fragments/layout :: head('Contact Us | ' + ${hospital.name}, 'Contact ' + ${hospital.name} + ' by phone, message or visit us.')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 <main id="main">
     <section class="page-header"><div class="container"><h1>Contact Us</h1></div></section>
     <section class="section-pad">
         <div class="container">
-            <dl class="row">
-                <dt class="col-sm-3">Phone</dt>
-                <dd class="col-sm-9"><a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a></dd>
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9" th:text="${hospital.email}">Email</dd>
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9" style="white-space: pre-line;" th:text="${hospital.address}">Address</dd>
-                <dt class="col-sm-3">Opening hours</dt>
-                <dd class="col-sm-9" style="white-space: pre-line;" th:text="${hospital.openingHours}">Hours</dd>
-                <dt class="col-sm-3">Directions</dt>
-                <dd class="col-sm-9">
-                    <a th:if="${hospital.mapUrl != null}" th:href="${hospital.mapUrl}"
-                       target="_blank" rel="noopener noreferrer">Open in maps</a>
-                    <span class="placeholder-note" th:if="${hospital.mapUrl == null}">[Map link to be added]</span>
-                </dd>
-            </dl>
-            <p>To book, <a th:href="@{/appointments/new}">request an appointment online</a> or call us.</p>
+            <div class="row g-5">
+                <div class="col-12 col-lg-6">
+                    <h2 class="h4 mb-3">Our details</h2>
+                    <dl class="row">
+                        <dt class="col-sm-4">Phone</dt>
+                        <dd class="col-sm-8"><a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a></dd>
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8" th:text="${hospital.email}">Email</dd>
+                        <dt class="col-sm-4">Address</dt>
+                        <dd class="col-sm-8" style="white-space: pre-line;" th:text="${hospital.address}">Address</dd>
+                        <dt class="col-sm-4">Opening hours</dt>
+                        <dd class="col-sm-8" style="white-space: pre-line;" th:text="${hospital.openingHours}">Hours</dd>
+                        <dt class="col-sm-4">Directions</dt>
+                        <dd class="col-sm-8">
+                            <a th:if="${hospital.mapUrl != null}" th:href="${hospital.mapUrl}"
+                               target="_blank" rel="noopener noreferrer">Open in maps</a>
+                            <span class="placeholder-note" th:if="${hospital.mapUrl == null}">[Map link to be added]</span>
+                        </dd>
+                    </dl>
+                    <p>To book a visit, <a th:href="@{/appointments/new}">request an appointment online</a>.</p>
+                    <p class="small">This website is not for emergencies.</p>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <h2 class="h4 mb-3">Send us a message</h2>
+
+                    <div th:if="${param.sent}" class="alert alert-success" role="status">
+                        Thank you. Your message was received. We will reply using the details you gave.
+                    </div>
+
+                    <form th:action="@{/contact}" th:object="${contactRequest}" method="post" novalidate>
+                        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+                            <p class="mb-1"><strong>Please correct the following:</strong></p>
+                            <ul class="mb-0"><li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li></ul>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Your name <span aria-hidden="true">*</span></label>
+                            <input type="text" id="name" th:field="*{name}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+                                   maxlength="100" autocomplete="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Mobile number</label>
+                            <input type="tel" id="phone" th:field="*{phone}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'"
+                                   inputmode="tel" autocomplete="tel" aria-describedby="reachHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" th:field="*{email}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"
+                                   maxlength="150" autocomplete="email" aria-describedby="reachHelp">
+                            <div id="reachHelp" class="form-text">Please give a phone number or an email so we can reply.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message <span aria-hidden="true">*</span></label>
+                            <textarea id="message" th:field="*{message}" class="form-control"
+                                      th:classappend="${#fields.hasErrors('message')} ? 'is-invalid'"
+                                      rows="4" maxlength="1000" aria-describedby="msgHelp" required></textarea>
+                            <div id="msgHelp" class="form-text">Please do not include medical history or sensitive details.</div>
+                        </div>
+
+                        <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                            <label for="website">Leave this field empty</label>
+                            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <p class="small">We use these details only to reply.
+                            See our <a th:href="@{/privacy}">Privacy Policy</a>.</p>
+                        <button type="submit" class="btn btn-teal">Send message</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </section>
 </main>

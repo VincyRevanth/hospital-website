@@ -1,14 +1,13 @@
 package com.syamalahomeo.hospital.web;
 
+import com.syamalahomeo.hospital.service.DoctorService;
+import com.syamalahomeo.hospital.service.ServiceOfferingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.syamalahomeo.hospital.service.DoctorService;
-import com.syamalahomeo.hospital.service.ServiceOfferingService;
 
 @Controller
 public class PageController {
@@ -29,9 +28,12 @@ public class PageController {
         model.addAttribute("services", serviceOfferingService.findActive());
         return "treatments";
     }
-    
-    @GetMapping("/contact")
-    public String contact() { return "contact"; }
+
+    @GetMapping("/faq")
+    public String faq() { return "faq"; }
+
+    @GetMapping("/privacy")
+    public String privacy() { return "privacy"; }
 
     @GetMapping("/doctors")
     public String doctors(Model model) {

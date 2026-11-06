@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${title}">Page title</title>
     <meta name="description" th:content="${description}">
+    <meta name="robots" content="noindex, nofollow" th:if="${status != null}">
+    <link rel="canonical" th:if="${canonicalUrl != null and status == null}" th:href="${canonicalUrl}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" th:content="${hospitalName}">
+    <meta property="og:title" th:content="${title}">
+    <meta property="og:description" th:content="${description}">
+    <meta property="og:url" th:if="${canonicalUrl != null}" th:content="${canonicalUrl}">
+    <meta property="og:image" th:if="${baseUrl != null}" th:content="${baseUrl} + '/img/logo.jpeg'">
+    <meta property="og:locale" content="en_IN">
+    <meta name="twitter:card" content="summary">
     <link rel="icon" th:href="@{/img/logo.jpeg}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/site.css}">
@@ -26,11 +36,16 @@
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/about}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/treatments}">Treatments</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/doctors}">Doctors</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/#faq}">FAQ</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about}"
+                        th:attr="aria-current=${currentPath == '/about' ? 'page' : null}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/treatments}"
+                        th:attr="aria-current=${currentPath == '/treatments' ? 'page' : null}">Treatments</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/doctors}"
+                        th:attr="aria-current=${currentPath == '/doctors' ? 'page' : null}">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/faq}"
+                        th:attr="aria-current=${currentPath == '/faq' ? 'page' : null}">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}"
+                        th:attr="aria-current=${currentPath == '/contact' ? 'page' : null}">Contact</a></li>
                     <li class="nav-item ms-lg-2"><a class="btn btn-teal" th:href="@{/appointments/new}">Request Appointment</a></li>
                 </ul>
             </div>
@@ -44,7 +59,8 @@
             <span th:text="${hospital.name}">HOSPITAL</span>. All rights reserved.</p>
         <p class="mb-0">
             <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">Phone</a>
-            &nbsp;|&nbsp; <a href="#">Privacy Policy</a> (page coming soon)
+            &nbsp;|&nbsp; <a th:href="@{/faq}">FAQ</a>
+            &nbsp;|&nbsp; <a th:href="@{/privacy}">Privacy Policy</a>
         </p>
     </div>
 </footer>

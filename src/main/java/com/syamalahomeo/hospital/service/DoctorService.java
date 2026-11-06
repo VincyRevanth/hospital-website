@@ -1,6 +1,7 @@
 package com.syamalahomeo.hospital.service;
 
 import com.syamalahomeo.hospital.dto.DoctorView;
+import com.syamalahomeo.hospital.dto.DoctorResponse;
 import com.syamalahomeo.hospital.entity.Doctor;
 import com.syamalahomeo.hospital.repository.DoctorRepository;
 import org.springframework.stereotype.Service;
@@ -35,5 +36,22 @@ public class DoctorService {
         String reg = (d.getRegistrationNumber() == null || d.getRegistrationNumber().isBlank())
                 ? null : d.getRegistrationNumber();
         return new DoctorView(d.getId(), d.getSlug(), d.getFullName(), d.getQualification(), bio, reg);
+    }
+    public List<DoctorResponse> apiList() {
+        return doctorRepository.findByActiveTrueOrderByDisplayOrderAscFullNameAsc()
+                .stream().map(this::toResponse).toList();
+    }
+
+    public Optional<DoctorResponse> apiFind(Long id) {
+        return doctorRepository.findById(id).filter(Doctor::isActive).map(this::toResponse);
+    }
+
+    private DoctorResponse toResponse(Doctor d) {
+        return new DoctorResponse(d.getId(), d.getSlug(), d.getFullName(), d.getQualification(),
+                blankToNull(d.getBio()), blankToNull(d.getRegistrationNumber()));
+    }
+
+    private static String blankToNull(String value) {
+        return (value == null || value.isBlank()) ? null : value.trim();
     }
 }

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Error | ' + ${hospital.name}, 'The request could not be completed.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="section-pad">
+        <div class="container text-center" style="max-width: 640px;">
+            <h1>Sorry, that did not work</h1>
+            <p>The request could not be completed. Please go back and try again.</p>
+            <a class="btn btn-teal" th:href="@{/}">Back to home</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
