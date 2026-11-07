@@ -1,5 +1,6 @@
 package com.syamalahomeo.hospital.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.time.Duration;
 
 @Configuration
 @EnableWebSecurity
@@ -21,16 +26,28 @@ public class SecurityConfig {
 
     private static final String CSP = String.join("; ",
             "default-src 'self'",
-            "script-src 'self' https://cdn.jsdelivr.net",
-            "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+            "script-src 'self'",
+            "style-src 'self'",
             "img-src 'self' data:",
-            "font-src 'self' https://cdn.jsdelivr.net",
+            "font-src 'self'",
+            "connect-src 'self'",
+            "object-src 'none'",
             "frame-ancestors 'none'",
             "form-action 'self'",
             "base-uri 'self'");
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, LoginAttemptService attempts) throws Exception {
+    public RateLimiter publicFormRateLimiter(
+            @Value("${ratelimit.public-form.max-requests:15}") int max,
+            @Value("${ratelimit.public-form.window-minutes:15}") int minutes) {
+        return new RateLimiter(max, Duration.ofMinutes(minutes));
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, LoginAttemptService attempts,
+                                           RateLimiter publicFormRateLimiter,
+                                           @Value("${security.hsts-max-age-seconds:300}") long hstsSeconds)
+            throws Exception {
 
         RequestMatcher publicAppointmentApi = request ->
                 "POST".equalsIgnoreCase(request.getMethod())
@@ -41,7 +58,6 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/login").permitAll()
-                // Everything administrative lives under these two prefixes
                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll())
             .formLogin(form -> form
@@ -60,15 +76,22 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID"))
             .csrf(csrf -> csrf.ignoringRequestMatchers(publicAppointmentApi))
             .exceptionHandling(ex -> ex
-                    .defaultAuthenticationEntryPointFor(
-                        new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), apiRequest)
-                    .defaultAuthenticationEntryPointFor(
-                        new LoginUrlAuthenticationEntryPoint("/admin/login"),
-                        new NegatedRequestMatcher(apiRequest)))
+                .defaultAuthenticationEntryPointFor(
+                    new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), apiRequest)
+                .defaultAuthenticationEntryPointFor(
+                    new LoginUrlAuthenticationEntryPoint("/admin/login"),
+                    new NegatedRequestMatcher(apiRequest)))
             .headers(headers -> headers
                 .contentSecurityPolicy(csp -> csp.policyDirectives(CSP))
                 .referrerPolicy(ref -> ref.policy(
-                        ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)))
+                        ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                .httpStrictTransportSecurity(hsts -> hsts
+                        .maxAgeInSeconds(hstsSeconds)
+                        .includeSubDomains(false))
+                .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy",
+                        "camera=(), microphone=(), geolocation=(), payment=()"))
+                .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin")))
+            .addFilterBefore(new PublicFormRateLimitFilter(publicFormRateLimiter), CsrfFilter.class)
             .addFilterBefore(new LoginRateLimitFilter(attempts), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

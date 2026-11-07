@@ -123,7 +123,8 @@ class PublicSiteTest {
     void contactFormSavesMessage() throws Exception {
         mvc.perform(post("/contact").with(csrf())
                         .param("name", "Test Person").param("email", "test@example.com")
-                        .param("message", "Hello"))
+                        .param("message", "Hello")
+                        .param("consent", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/contact?sent"));
         assertEquals(1, messages.count());
@@ -132,7 +133,8 @@ class PublicSiteTest {
     @Test
     void contactFormNeedsPhoneOrEmail() throws Exception {
         mvc.perform(post("/contact").with(csrf())
-                        .param("name", "Test Person").param("message", "Hello"))
+                        .param("name", "Test Person").param("message", "Hello")
+                        .param("consent", "true"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("contact"))
                 .andExpect(model().attributeHasErrors("contactRequest"));

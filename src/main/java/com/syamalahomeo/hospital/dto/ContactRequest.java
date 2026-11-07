@@ -1,6 +1,7 @@
 package com.syamalahomeo.hospital.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -31,4 +32,10 @@ public class ContactRequest {
     public void setEmail(String email) { this.email = email; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+    
+    @AssertTrue(message = "Please confirm that you agree to the Privacy Policy.")
+    private boolean consent;
+
+    public boolean isConsent() { return consent; }
+    public void setConsent(boolean consent) { this.consent = consent; }
 }

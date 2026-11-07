@@ -19,7 +19,7 @@
                     <div th:if="${m.phone() != null}"><a th:href="'tel:' + ${m.phone()}" th:text="${m.phone()}">phone</a></div>
                     <div th:if="${m.email() != null}" th:text="${m.email()}">email</div>
                 </td>
-                <td style="white-space: pre-line;" th:text="${m.message()}">message</td>
+                <td class="pre-line" th:text="${m.message()}">message</td>
             </tr>
             </tbody>
         </table>

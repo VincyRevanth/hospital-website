@@ -70,7 +70,8 @@ class AppointmentWebTest {
                         .param("phone", "9876543210")
                         .param("doctorId", String.valueOf(doctorId()))
                         .param("preferredDate", futureDate())
-                        .param("preferredTime", "11:00"))
+                        .param("preferredTime", "11:00")
+        				.param("consent", "true"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/appointments/received"));
     }
@@ -78,7 +79,7 @@ class AppointmentWebTest {
     @Test
     void apiCreatesPendingAppointment() throws Exception {
         String json = """
-                {"patientName":"Test Patient","phone":"9876543210","doctorId":%d,
+                {"patientName":"Test Patient","phone":"9876543210","consent":true,"doctorId":%d,
                  "preferredDate":"%s","preferredTime":"12:00"}
                 """.formatted(doctorId(), futureDate());
         mvc.perform(post("/api/appointments").contentType(MediaType.APPLICATION_JSON).content(json))
@@ -89,6 +90,28 @@ class AppointmentWebTest {
     @Test
     void apiRejectsInvalidBody() throws Exception {
         mvc.perform(post("/api/appointments").contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isBadRequest());
+    }
+    
+    @Test
+    void formWithoutConsentIsRefused() throws Exception {
+        mvc.perform(post("/appointments")
+                        .param("patientName", "Test Patient")
+                        .param("phone", "9876543210")
+                        .param("doctorId", String.valueOf(doctorId()))
+                        .param("preferredDate", futureDate())
+                        .param("preferredTime", "11:00"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrors("appointmentRequest", "consent"));
+    }
+
+    @Test
+    void apiWithoutConsentIs400() throws Exception {
+        String json = """
+                {"patientName":"Test Patient","phone":"9876543210","doctorId":%d,
+                 "preferredDate":"%s","preferredTime":"12:00"}
+                """.formatted(doctorId(), futureDate());
+        mvc.perform(post("/api/appointments").contentType(MediaType.APPLICATION_JSON).content(json))
                 .andExpect(status().isBadRequest());
     }
 }

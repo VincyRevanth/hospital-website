@@ -32,4 +32,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @EntityGraph(attributePaths = {"doctor", "service"})
     List<Appointment> findByStatusAndPreferredDateOrderByPreferredTimeAsc(AppointmentStatus status, LocalDate date);
+    
+    long deleteByPreferredDateBefore(java.time.LocalDate cutoff);
 }

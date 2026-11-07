@@ -67,3 +67,11 @@ section { scroll-margin-top: 80px; }
 .btn { min-height: 44px; }
 .btn-sm { min-height: 36px; }
 .form-text, .small { color: #4b5563; }
+
+
+.hp-field { position: absolute; left: -9999px; }
+.pre-line { white-space: pre-line; }
+.maxw-440 { max-width: 440px; }
+.maxw-640 { max-width: 640px; }
+.maxw-720 { max-width: 720px; }
+.maxw-800 { max-width: 800px; }

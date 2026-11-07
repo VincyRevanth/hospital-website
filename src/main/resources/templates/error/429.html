@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Too many requests | ' + ${hospital.name}, 'Too many requests. Please try again later.')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+<main id="main">
+    <section class="section-pad">
+        <div class="container text-center maxw-640">
+            <h1>Please slow down</h1>
+            <p>You have sent several requests in a short time. Please wait a few minutes and try again.
+                For urgent matters, please call
+                <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">phone</a>.</p>
+            <a class="btn btn-teal" th:href="@{/}">Back to home</a>
+        </div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>

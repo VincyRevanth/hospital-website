@@ -1,6 +1,7 @@
 package com.syamalahomeo.hospital.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -55,4 +56,10 @@ public class AppointmentRequest {
     public void setPreferredTime(String preferredTime) { this.preferredTime = preferredTime; }
     public String getMessage() { return message; }
     public void setMessage(String message) { this.message = message; }
+    
+    @AssertTrue(message = "Please confirm that you agree to the Privacy Policy.")
+    private boolean consent;
+
+    public boolean isConsent() { return consent; }
+    public void setConsent(boolean consent) { this.consent = consent; }
 }
