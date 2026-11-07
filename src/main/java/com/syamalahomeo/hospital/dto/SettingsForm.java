@@ -1,6 +1,9 @@
 package com.syamalahomeo.hospital.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -34,4 +37,13 @@ public class SettingsForm {
     public void setOpeningHours(String openingHours) { this.openingHours = openingHours; }
     public String getMapUrl() { return mapUrl; }
     public void setMapUrl(String mapUrl) { this.mapUrl = mapUrl; }
+    @NotNull(message = "Please enter the consultation validity in days.")
+    @Min(value = 1, message = "Consultation validity must be at least 1 day.")
+    @Max(value = 365, message = "Consultation validity must be 365 days or fewer.")
+    private Integer consultationValidityDays = 15;
+
+    public Integer getConsultationValidityDays() { return consultationValidityDays; }
+    public void setConsultationValidityDays(Integer consultationValidityDays) {
+        this.consultationValidityDays = consultationValidityDays;
+    }
 }

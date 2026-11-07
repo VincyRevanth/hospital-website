@@ -58,4 +58,8 @@ public class GlobalModelAttributes {
     public String currentPath(HttpServletRequest request) {
         return request.getRequestURI();
     }
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(HttpServletRequest request) {
+        return request.isUserInRole("ADMIN");
+    }
 }

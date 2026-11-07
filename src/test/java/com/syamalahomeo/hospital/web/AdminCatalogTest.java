@@ -104,7 +104,8 @@ class AdminCatalogTest {
                         .param("email", "info@example.com")
                         .param("address", "Test address line")
                         .param("openingHours", "Mon-Sat test hours")
-                        .param("mapUrl", ""))
+                        .param("mapUrl", "")
+                        .param("consultationValidityDays", "15"))
                 .andExpect(status().is3xxRedirection());
 
         String html = mvc.perform(get("/contact")).andExpect(status().isOk())

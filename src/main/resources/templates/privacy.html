@@ -1,59 +1,77 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Privacy Policy | ' + ${hospital.name}, 'How ' + ${hospital.name} + ' handles the personal information collected through this website.')}"></head>
+
+<head
+	th:replace="~{fragments/layout :: head('Privacy Policy | ' + ${hospital.name}, 'How ' + ${hospital.name} + ' handles the personal information collected through this website.')}">
+</head>
+
 <body>
-<header th:replace="~{fragments/layout :: header}"></header>
-<main id="main">
-    <section class="page-header"><div class="container"><h1>Privacy Policy</h1></div></section>
-    <section class="section-pad">
-        <div class="container maxw-800">
+	<header th:replace="~{fragments/layout :: header}"></header>
+	<main id="main">
+		<section class="page-header">
+			<div class="container">
+				<h1>Privacy Policy</h1>
+			</div>
+		</section>
+		<section class="section-pad">
+			<div class="container maxw-800">
 
-            <div class="alert alert-warning" role="note">
-                <strong><p>Page styling and scripts are served from this website itself. We do not load third-party
-					scripts [verify before launch]. If you follow the map link on the Contact page, you leave this
-					website and that service's own policy applies.</p>
-            </div>
+				<div class="alert alert-warning" role="note">
+					<strong>
+						<p>Page styling and scripts are served from this website itself. We do not load third-party
+							scripts [verify before launch]. If you follow the map link on the Contact page, you leave
+							this
+							website and that service's own policy applies.</p>
+				</div>
 
-            <h2 class="h4">1. Who we are</h2>
-            <p><span th:text="${hospital.name}">Hospital</span>. Contact:
-                <a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">phone</a>.</p>
+				<h2 class="h4">1. Who we are</h2>
+				<p><span th:text="${hospital.name}">Hospital</span>. Contact:
+					<a th:href="'tel:' + ${hospital.phoneLink}" th:text="${hospital.phoneDisplay}">phone</a>.
+				</p>
 
-            <h2 class="h4">2. What we collect</h2>
-            <p><strong>Appointment requests:</strong> patient name, mobile number, optional email, the doctor or
-                service chosen, the preferred date and time, and an optional short message.</p>
-            <p><strong>Contact messages:</strong> your name, a phone number or email, and your message.</p>
-            <p>We do not ask for medical records, diagnoses or prescriptions on this website. Please do not include
-                them in messages.</p>
+				<h2 class="h4">2. What we collect</h2>
+				<p><strong>Appointment requests:</strong> patient name, mobile number, optional email, the doctor or
+					service chosen, the preferred date and time, and an optional short message.</p>
+				<p><strong>Contact messages:</strong> your name, a phone number or email, and your message.</p>
+				<p>We do not ask for medical records, diagnoses or prescriptions on this website. Please do not include
+					them in messages.</p>
+				<p><strong>In-person registration:</strong> when you visit, our staff record your name, age, gender,
+					phone number, address (optional), the name of a parent or guardian if you are under 18, and the
+					dates of your consultations, together with the staff member who recorded them. This is kept in the
+					hospital's records system so that we can find your record when you return and print your
+					out-patient form. Only authorised hospital staff can see it. </p>
 
-            <h2 class="h4">3. Why we use it</h2>
-            <p>Only to respond to your request: to confirm, change or decline an appointment, or to reply to your message.</p>
+				<h2 class="h4">3. Why we use it</h2>
+				<p>Only to respond to your request: to confirm, change or decline an appointment, or to reply to your
+					message.</p>
 
-            <h2 class="h4">4. Who can see it</h2>
-            <p>Authorised hospital staff who sign in to the administration area. Our hosting and database provider
-                [name to be supplied] stores the data on our behalf. Server logs kept by that provider may contain
-                technical details such as IP addresses.</p>
+				<h2 class="h4">4. Who can see it</h2>
+				<p>Authorised hospital staff who sign in to the administration area. Our hosting and database provider
+					[name to be supplied] stores the data on our behalf. Server logs kept by that provider may contain
+					technical details such as IP addresses.</p>
 
-            <h2 class="h4">5. Cookies</h2>
-            <p>Administrator sign-in uses a session cookie. The public pages do not use advertising or analytics
-                cookies [update this if that changes].</p>
+				<h2 class="h4">5. Cookies</h2>
+				<p>Administrator sign-in uses a session cookie. The public pages do not use advertising or analytics
+					cookies [update this if that changes].</p>
 
-            <h2 class="h4">6. Third-party content</h2>
-            <p>Page styling and scripts are currently loaded from a content delivery network (jsDelivr), so your
-                browser contacts that service when you open a page [update when these files are hosted by us].</p>
+				<h2 class="h4">6. Third-party content</h2>
+				<p>Page styling and scripts are currently loaded from a content delivery network (jsDelivr), so your
+					browser contacts that service when you open a page [update when these files are hosted by us].</p>
 
-            <h2 class="h4">7. How long we keep it</h2>
-            <p class="placeholder-note">[Retention periods to be decided by the hospital.]</p>
+				<h2 class="h4">7. How long we keep it</h2>
+				<p class="placeholder-note">[Retention periods to be decided by the hospital.]</p>
 
-            <h2 class="h4">8. Your rights and how to contact us</h2>
-            <p class="placeholder-note">[Describe how to ask for access, correction, erasure or to withdraw consent,
-                and name the grievance contact. To be completed after legal review.]</p>
+				<h2 class="h4">8. Your rights and how to contact us</h2>
+				<p class="placeholder-note">[Describe how to ask for access, correction, erasure or to withdraw consent,
+					and name the grievance contact. To be completed after legal review.]</p>
 
-            <h2 class="h4">9. Changes</h2>
-            <p>Last updated: <span class="placeholder-note">[date]</span></p>
-        </div>
-    </section>
-</main>
-<footer th:replace="~{fragments/layout :: footer}"></footer>
-<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+				<h2 class="h4">9. Changes</h2>
+				<p>Last updated: <span class="placeholder-note">[date]</span></p>
+			</div>
+		</section>
+	</main>
+	<footer th:replace="~{fragments/layout :: footer}"></footer>
+	<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
+
 </html>

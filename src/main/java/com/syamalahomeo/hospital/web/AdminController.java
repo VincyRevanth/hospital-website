@@ -1,6 +1,7 @@
 package com.syamalahomeo.hospital.web;
 
 import com.syamalahomeo.hospital.entity.AppointmentStatus;
+import jakarta.servlet.http.HttpServletRequest;
 import com.syamalahomeo.hospital.exception.BusinessRuleException;
 import com.syamalahomeo.hospital.exception.InvalidStatusTransitionException;
 import com.syamalahomeo.hospital.service.AdminAppointmentService;
@@ -35,7 +36,10 @@ public class AdminController {
     }
 
     @GetMapping({"", "/"})
-    public String dashboard(Model model, Principal principal) {
+    public String dashboard(Model model, Principal principal, HttpServletRequest request) {
+        if (!request.isUserInRole("ADMIN")) {
+            return "redirect:/admin/patients"; // staff have no dashboard
+        }
         model.addAttribute("adminName", principal.getName());
         model.addAttribute("stats", service.stats());
         return "admin/dashboard";

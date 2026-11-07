@@ -51,4 +51,11 @@ public class HospitalSettings {
     public void setOpeningHours(String openingHours) { this.openingHours = openingHours; }
     public String getMapUrl() { return mapUrl; }
     public void setMapUrl(String mapUrl) { this.mapUrl = mapUrl; }
+    @Column(name = "consultation_validity_days", nullable = false)
+    private int consultationValidityDays = 15;
+
+    public int getConsultationValidityDays() { return consultationValidityDays; }
+    public void setConsultationValidityDays(int consultationValidityDays) {
+        this.consultationValidityDays = consultationValidityDays;
+    }
 }

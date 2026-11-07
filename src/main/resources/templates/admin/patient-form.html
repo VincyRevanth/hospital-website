@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead(${pageTitle})}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad maxw-720">
+    <h1 class="h3 mb-3" th:text="${pageTitle}">Patient</h1>
+
+    <div class="alert alert-info" role="note">
+        Enter only the details needed for the OP slip. Do not enter diagnosis or medical history here.
+        Tell the patient their details are stored by the hospital (see the Privacy Policy).
+    </div>
+
+    <div th:if="${duplicates != null}" class="alert alert-warning" role="alert">
+        <p class="mb-2"><strong>A patient with this name and phone already exists:</strong></p>
+        <ul>
+            <li th:each="d : ${duplicates}">
+                <a th:href="@{/admin/patients/{id}(id=${d.id()})}" th:text="${d.code() + ' - ' + d.fullName()}">SHH-000001</a>
+            </li>
+        </ul>
+        <p class="mb-0">If this is the same person, open their record and start a new consultation instead.
+            Otherwise tick the box below and save again.</p>
+    </div>
+
+    <form th:action="@{${formAction}}" th:object="${form}" method="post" novalidate>
+        <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger" role="alert">
+            <ul class="mb-0"><li th:each="err : ${#fields.errors('*')}" th:text="${err}">Error</li></ul>
+        </div>
+
+        <div class="mb-3">
+            <label for="fullName" class="form-label">Full name *</label>
+            <input type="text" id="fullName" th:field="*{fullName}" class="form-control"
+                   th:classappend="${#fields.hasErrors('fullName')} ? 'is-invalid'" maxlength="100" required>
+        </div>
+
+        <div class="row">
+            <div class="col-6 col-md-4 mb-3">
+                <label for="ageYears" class="form-label">Age (years) *</label>
+                <input type="number" id="ageYears" th:field="*{ageYears}" class="form-control"
+                       th:classappend="${#fields.hasErrors('ageYears')} ? 'is-invalid'" min="0" max="120" required>
+            </div>
+            <div class="col-6 col-md-4 mb-3">
+                <label for="gender" class="form-label">Gender *</label>
+                <select id="gender" th:field="*{gender}" class="form-select"
+                        th:classappend="${#fields.hasErrors('gender')} ? 'is-invalid'" required>
+                    <option value="">Choose</option>
+                    <option th:each="g : ${genders}" th:value="${g}" th:text="${g.label}">Male</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone *</label>
+            <input type="tel" id="phone" th:field="*{phone}" class="form-control"
+                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid'" inputmode="tel" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" th:field="*{address}" class="form-control" rows="2" maxlength="300"
+                      th:classappend="${#fields.hasErrors('address')} ? 'is-invalid'"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="guardianName" class="form-label">Parent or guardian name (required under 18)</label>
+            <input type="text" id="guardianName" th:field="*{guardianName}" class="form-control"
+                   th:classappend="${#fields.hasErrors('guardianName')} ? 'is-invalid'" maxlength="100">
+        </div>
+
+        <div class="mb-3" th:unless="${editing}">
+            <label for="doctorId" class="form-label">Consulting doctor (optional)</label>
+            <select id="doctorId" th:field="*{doctorId}" class="form-select">
+                <option value="">Not decided</option>
+                <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.name}">Doctor</option>
+            </select>
+        </div>
+
+        <div class="form-check mb-4" th:if="${duplicates != null}">
+            <input type="checkbox" id="createAnyway" th:field="*{createAnyway}" class="form-check-input">
+            <label for="createAnyway" class="form-check-label">This is a different person. Create a new record anyway.</label>
+        </div>
+
+        <button type="submit" class="btn btn-teal">Save</button>
+        <a class="btn btn-outline-teal ms-2" th:href="@{/admin/patients}">Cancel</a>
+    </form>
+</main>
+<th:block th:replace="~{fragments/admin-layout :: adminScripts}"></th:block>
+</body>
+</html>

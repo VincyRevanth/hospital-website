@@ -36,6 +36,16 @@
             <input type="url" id="mapUrl" th:field="*{mapUrl}" class="form-control"
                    th:classappend="${#fields.hasErrors('mapUrl')} ? 'is-invalid'" maxlength="500">
         </div>
+		<div class="mb-4">
+		    <label for="consultationValidityDays" class="form-label">Consultation validity (days) *</label>
+		    <input type="number" id="consultationValidityDays" th:field="*{consultationValidityDays}"
+		           class="form-control" min="1" max="365" required aria-describedby="validHelp"
+		           th:classappend="${#fields.hasErrors('consultationValidityDays')} ? 'is-invalid'">
+		    <div id="validHelp" class="form-text">
+		        How many days after a consultation the patient can return without a new one.
+		        Changing this affects new consultations only.
+		    </div>
+		</div>
         <button type="submit" class="btn btn-teal">Save</button>
     </form>
 </main>

@@ -38,6 +38,7 @@ public class SettingsService {
     public SettingsForm form() {
         SettingsForm form = new SettingsForm();
         repository.findById(HospitalSettings.SINGLE_ID).ifPresent(s -> {
+        	form.setConsultationValidityDays(s.getConsultationValidityDays());
             form.setPhone(s.getPhone());
             form.setEmail(s.getEmail());
             form.setAddress(s.getAddress());
@@ -55,6 +56,7 @@ public class SettingsService {
         s.setAddress(blankToNull(form.getAddress()));
         s.setOpeningHours(blankToNull(form.getOpeningHours()));
         s.setMapUrl(blankToNull(form.getMapUrl()));
+        s.setConsultationValidityDays(form.getConsultationValidityDays());
         repository.save(s);
     }
 
@@ -72,5 +74,11 @@ public class SettingsService {
 
     private static String blankToNull(String value) {
         return (value == null || value.isBlank()) ? null : value.trim();
+    }
+    @Transactional(readOnly = true)
+    public int consultationValidityDays() {
+        return repository.findById(HospitalSettings.SINGLE_ID)
+                .map(HospitalSettings::getConsultationValidityDays)
+                .orElse(15);
     }
 }

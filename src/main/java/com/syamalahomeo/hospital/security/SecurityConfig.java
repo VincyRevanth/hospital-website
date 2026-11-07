@@ -1,14 +1,17 @@
 package com.syamalahomeo.hospital.security;
 
+import com.syamalahomeo.hospital.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -45,6 +48,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, LoginAttemptService attempts,
+                                           AdminUserRepository adminUsers,
                                            RateLimiter publicFormRateLimiter,
                                            @Value("${security.hsts-max-age-seconds:300}") long hstsSeconds)
             throws Exception {
@@ -58,12 +62,20 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/admin/login").permitAll()
+                // Pages both roles may use
+                .requestMatchers("/admin", "/admin/", "/admin/password").hasAnyRole("ADMIN", "STAFF")
+                // Patient pages: staff may register, search, consult and print; only admin edits or deletes
+                .requestMatchers(HttpMethod.POST, "/admin/patients/*").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/admin/patients/*/edit").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/admin/patients/*/delete").hasRole("ADMIN")
+                .requestMatchers("/admin/patients", "/admin/patients/**").hasAnyRole("ADMIN", "STAFF")
+                // Everything else administrative is admin only
                 .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll())
             .formLogin(form -> form
                 .loginPage("/admin/login")
                 .loginProcessingUrl("/admin/login")
-                .successHandler(new AdminLoginSuccessHandler(attempts))
+                .successHandler(new AdminLoginSuccessHandler(attempts, adminUsers))
                 .failureHandler((request, response, exception) -> {
                     attempts.recordFailure(request.getRemoteAddr(), request.getParameter("username"));
                     response.sendRedirect(request.getContextPath() + "/admin/login?error");
@@ -92,7 +104,8 @@ public class SecurityConfig {
                         "camera=(), microphone=(), geolocation=(), payment=()"))
                 .addHeaderWriter(new StaticHeadersWriter("Cross-Origin-Opener-Policy", "same-origin")))
             .addFilterBefore(new PublicFormRateLimitFilter(publicFormRateLimiter), CsrfFilter.class)
-            .addFilterBefore(new LoginRateLimitFilter(attempts), UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(new LoginRateLimitFilter(attempts), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new PasswordChangeRequiredFilter(), AuthorizationFilter.class);
 
         return http.build();
     }

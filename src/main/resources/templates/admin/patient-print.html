@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('OP form')}"></head>
+<body>
+<div class="no-print container py-3 d-flex gap-2">
+    <button type="button" class="btn btn-teal" data-print>Print</button>
+    <a class="btn btn-outline-teal" th:href="@{/admin/patients/{id}(id=${sheet.patient().id()})}">Back to patient</a>
+</div>
+
+<div class="op-sheet">
+    <div class="op-header">
+        <img th:src="@{/img/logo.jpeg}" alt="" class="op-logo">
+        <div class="op-hospital">
+            <h1 th:text="${hospital.name}">HOSPITAL</h1>
+            <div class="pre-line" th:text="${hospital.address}">Address</div>
+            <div>Phone: <span th:text="${hospital.phoneDisplay}">Phone</span></div>
+        </div>
+    </div>
+
+    <div class="op-title">OUT-PATIENT (OP) FORM</div>
+
+    <div class="op-details">
+        <div><strong>Patient ID:</strong> <span th:text="${sheet.patient().code()}">SHH-000001</span></div>
+        <div><strong>Name:</strong> <span th:text="${sheet.patient().fullName()}">Name</span></div>
+        <div><strong>Age / Sex:</strong>
+            <span th:text="${sheet.patient().age() + ' Y / ' + sheet.patient().gender()}">30 Y / Male</span></div>
+        <div><strong>Phone:</strong> <span th:text="${sheet.patient().phone()}">phone</span></div>
+        <div><strong>Date:</strong> <span th:text="${sheet.consultation().date()}">date</span></div>
+        <div><strong>Valid until:</strong> <span th:text="${sheet.consultation().validUntil()}">date</span></div>
+        <div th:if="${sheet.consultation().doctorName() != null}">
+            <strong>Doctor:</strong> <span th:text="${sheet.consultation().doctorName()}">Doctor</span></div>
+        <div th:if="${sheet.patient().guardianName() != null}">
+            <strong>Guardian:</strong> <span th:text="${sheet.patient().guardianName()}">Guardian</span></div>
+        <div class="op-wide" th:if="${sheet.patient().address() != null}">
+            <strong>Address:</strong> <span th:text="${sheet.patient().address()}">Address</span></div>
+    </div>
+
+	<div class="op-vitals">
+	    <div class="op-vital"><span>BP-</span><span class="op-line"></span></div>
+	    <div class="op-vital"><span>PR-</span><span class="op-line"></span></div>
+	    <div class="op-vital"><span>RR-</span><span class="op-line"></span></div>
+	    <div class="op-vital"><span>Temp-</span><span class="op-line"></span></div>
+	    <div class="op-vital"><span>SpO2-</span><span class="op-line"></span></div>
+	</div>
+
+	<div class="op-body"></div>
+
+    <div class="op-footer">
+        <span th:text="${hospital.name}">HOSPITAL</span>
+        <span>Printed on <span th:text="${sheet.printedOn()}">date</span></span>
+    </div>
+</div>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

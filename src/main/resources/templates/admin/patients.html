@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Patients')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Patients</h1>
+        <a class="btn btn-teal" th:href="@{/admin/patients/new}">Register new patient</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+    <form method="get" th:action="@{/admin/patients}" class="row g-2 mb-4" role="search">
+        <div class="col-12 col-md-8">
+            <label for="q" class="form-label">Search by patient ID, name or phone</label>
+            <input type="search" id="q" name="q" class="form-control" th:value="${q}" autofocus>
+        </div>
+        <div class="col-12 col-md-4 align-self-end">
+            <button type="submit" class="btn btn-teal">Search</button>
+            <a class="btn btn-outline-teal ms-1" th:href="@{/admin/patients}">Clear</a>
+        </div>
+    </form>
+
+    <p class="small" th:if="${q.isEmpty()}">Showing the 20 most recently registered patients.</p>
+    <p th:if="${patients.isEmpty()}">No patients found.</p>
+
+    <div class="table-responsive" th:unless="${patients.isEmpty()}">
+        <table class="table align-middle">
+            <thead><tr><th scope="col">Patient ID</th><th scope="col">Name</th><th scope="col">Age / Sex</th>
+                <th scope="col">Phone</th><th scope="col">Action</th></tr></thead>
+            <tbody>
+            <tr th:each="p : ${patients}">
+                <td th:text="${p.code()}">SHH-000001</td>
+                <td th:text="${p.fullName()}">Name</td>
+                <td th:text="${p.age() + ' / ' + p.gender()}">30 / Male</td>
+                <td th:text="${p.phone()}">phone</td>
+                <td><a class="btn btn-sm btn-outline-teal" th:href="@{/admin/patients/{id}(id=${p.id()})}"
+                       th:attr="aria-label='Open ' + ${p.fullName()}">Open</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<th:block th:replace="~{fragments/admin-layout :: adminScripts}"></th:block>
+</body>
+</html>

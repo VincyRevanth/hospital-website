@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Patient')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad">
+    <div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" role="alert" th:text="${error}"></div>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+        <div>
+            <h1 class="h3 mb-1" th:text="${detail.patient().fullName()}">Name</h1>
+            <p class="mb-0">Patient ID: <strong th:text="${detail.patient().code()}">SHH-000001</strong></p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-teal" th:href="@{/admin/patients/{id}/print(id=${detail.patient().id()})}"
+               target="_blank" rel="noopener">Print OP form</a>
+			   <a class="btn btn-outline-teal" th:if="${isAdmin}"
+			      th:href="@{/admin/patients/{id}/edit(id=${detail.patient().id()})}">Edit details</a>
+			   <form method="post" th:if="${isAdmin}"
+			         th:action="@{/admin/patients/{id}/delete(id=${detail.patient().id()})}"
+			         data-confirm="Delete this patient and all their consultation records? This cannot be undone.">
+			       <button type="submit" class="btn btn-outline-danger">Delete</button>
+			   </form>
+            </form>
+        </div>
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Age / Sex</dt>
+        <dd class="col-sm-9" th:text="${detail.patient().age() + ' years / ' + detail.patient().gender()}">30 / Male</dd>
+        <dt class="col-sm-3">Phone</dt>
+        <dd class="col-sm-9"><a th:href="'tel:' + ${detail.patient().phone()}" th:text="${detail.patient().phone()}">phone</a></dd>
+        <dt class="col-sm-3" th:if="${detail.patient().address() != null}">Address</dt>
+        <dd class="col-sm-9 pre-line" th:if="${detail.patient().address() != null}" th:text="${detail.patient().address()}">address</dd>
+        <dt class="col-sm-3" th:if="${detail.patient().guardianName() != null}">Parent / guardian</dt>
+        <dd class="col-sm-9" th:if="${detail.patient().guardianName() != null}" th:text="${detail.patient().guardianName()}">guardian</dd>
+        <dt class="col-sm-3">Registered on</dt>
+        <dd class="col-sm-9" th:text="${detail.patient().registeredOn()}">date</dd>
+    </dl>
+
+    <h2 class="h5">Consultation status</h2>
+    <div th:if="${detail.latest() == null}" class="alert alert-secondary">No consultation recorded yet.</div>
+    <div th:if="${detail.latest() != null and detail.latest().valid()}" class="alert alert-success" role="status">
+        <strong>Valid</strong> until <span th:text="${detail.latest().validUntil()}">date</span>
+        (<span th:text="${detail.latest().daysLeft()}">0</span> days left).
+        Last consultation: <span th:text="${detail.latest().date()}">date</span>.
+    </div>
+    <div th:if="${detail.latest() != null and !detail.latest().valid()}" class="alert alert-warning" role="status">
+        <strong>Expired</strong> on <span th:text="${detail.latest().validUntil()}">date</span>.
+        A new consultation is needed.
+    </div>
+
+    <form method="post" class="row g-2 align-items-end mb-4"
+          th:action="@{/admin/patients/{id}/consultations(id=${detail.patient().id()})}"
+          th:attr="data-confirm=${detail.latest() != null and detail.latest().valid()} ? 'The current consultation is still valid. Record a new one anyway?' : null">
+        <div class="col-12 col-md-5">
+            <label for="doctorId" class="form-label">Consulting doctor (optional)</label>
+            <select id="doctorId" name="doctorId" class="form-select">
+                <option value="">Not decided</option>
+                <option th:each="d : ${doctors}" th:value="${d.id}" th:text="${d.name}">Doctor</option>
+            </select>
+        </div>
+        <div class="col-12 col-md-4">
+            <button type="submit" class="btn btn-teal">Start new consultation</button>
+        </div>
+        <div class="col-12 form-text">
+            New consultations are valid for <span th:text="${detail.validityDays()}">15</span> days.
+        </div>
+    </form>
+
+    <h2 class="h5">Consultation history (last 10)</h2>
+    <div class="table-responsive">
+        <table class="table table-sm align-middle">
+            <thead><tr><th scope="col">Date</th><th scope="col">Valid until</th>
+                <th scope="col">Doctor</th><th scope="col">Recorded by</th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${detail.history()}">
+                <td th:text="${c.date()}">date</td>
+                <td th:text="${c.validUntil()}">date</td>
+                <td th:text="${c.doctorName() != null} ? ${c.doctorName()} : '-'">doctor</td>
+                <td th:text="${c.createdBy()}">user</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a th:href="@{/admin/patients}">Back to patients</a>
+</main>
+<th:block th:replace="~{fragments/admin-layout :: adminScripts}"></th:block>
+</body>
+</html>

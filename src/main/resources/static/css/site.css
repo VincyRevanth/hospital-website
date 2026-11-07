@@ -75,3 +75,30 @@ section { scroll-margin-top: 80px; }
 .maxw-640 { max-width: 640px; }
 .maxw-720 { max-width: 720px; }
 .maxw-800 { max-width: 800px; }
+
+/* ---- Out-patient (OP) form ---- */
+.op-sheet { max-width: 210mm; min-height: 270mm; margin: 0 auto; padding: 8mm 10mm; background: #fff;
+            color: #000; display: flex; flex-direction: column; border: 1px solid #ccc; }
+.op-header { display: flex; align-items: center; gap: 14px; border-bottom: 2px solid #000; padding-bottom: 8px; }
+.op-logo { width: 22mm; height: 22mm; object-fit: cover; border-radius: 50%; }
+.op-hospital h1 { font-size: 20pt; margin: 0; color: #000; }
+.op-hospital div { font-size: 10pt; }
+.op-title { text-align: center; font-weight: 700; letter-spacing: 1px; padding: 6px 0; font-size: 11pt; }
+.op-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 12px; padding: 6px 0 8px;
+              border-top: 1px solid #000; border-bottom: 1px solid #000; font-size: 11pt; }
+.op-wide { grid-column: 1 / -1; }
+.op-body { flex: 1; padding-top: 8px; }
+.op-vitals { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 10px;
+             padding: 12px 0 8px; border-bottom: 1px solid #000; }
+.op-vital { display: flex; align-items: flex-end; gap: 4px; font-weight: 700;
+            font-size: 11pt; white-space: nowrap; }
+.op-line { flex: 1; border-bottom: 1px solid #000; height: 8mm; min-width: 12mm; }
+.op-footer { border-top: 1px solid #000; font-size: 9pt; padding-top: 4px; display: flex;
+             justify-content: space-between; gap: 12px; }
+@page { size: A4; margin: 8mm; }
+@media print {
+    .no-print { display: none !important; }
+    body { background: #fff; }
+    .op-sheet { border: 0; padding: 0; max-width: none; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

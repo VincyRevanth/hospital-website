@@ -14,20 +14,28 @@
     <nav class="navbar navbar-expand bg-white border-bottom" aria-label="Admin navigation">
         <div class="container">
             <a class="navbar-brand brand" th:href="@{/admin}">Admin</a>
-			<ul class="navbar-nav me-auto flex-wrap">
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin}">Dashboard</a></li>
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin/appointments}">Appointments</a></li>
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin/messages}">Messages</a></li>
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin/doctors}">Doctors</a></li>
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin/services}">Services</a></li>
-			    <li class="nav-item"><a class="nav-link" th:href="@{/admin/settings}">Settings</a></li>
-			</ul>
+            <ul class="navbar-nav me-auto flex-wrap">
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/patients}">Patients</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/appointments}">Appointments</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/messages}">Messages</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/doctors}">Doctors</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/services}">Services</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/settings}">Settings</a></li>
+                <li class="nav-item" th:if="${isAdmin}"><a class="nav-link" th:href="@{/admin/users}">Staff</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/admin/password}">Password</a></li>
+            </ul>
             <form th:action="@{/admin/logout}" method="post" class="d-flex">
                 <button type="submit" class="btn btn-outline-teal btn-sm">Sign out</button>
             </form>
         </div>
     </nav>
 </header>
+
+<th:block th:fragment="adminScripts">
+    <th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+    <script th:src="@{/js/admin.js}"></script>
+</th:block>
 
 </body>
 </html>

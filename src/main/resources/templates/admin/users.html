@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/admin-layout :: adminHead('Staff accounts')}"></head>
+<body>
+<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+<main id="main" class="container section-pad">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h3 mb-0">Staff accounts</h1>
+        <a class="btn btn-teal" th:href="@{/admin/users/new}">Add staff account</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+
+    <p class="small">Staff can register patients, search, start consultations and print OP forms.
+        They cannot edit or delete patients or open anything else. Create one account per person.
+        A disabled account cannot sign in again, but an open session may continue for up to 30 minutes.</p>
+
+    <p th:if="${staff.isEmpty()}">No staff accounts yet.</p>
+    <div class="table-responsive" th:unless="${staff.isEmpty()}">
+        <table class="table align-middle">
+            <thead><tr><th scope="col">Username</th><th scope="col">Status</th>
+                <th scope="col">Password</th><th scope="col">Created</th><th scope="col">Actions</th></tr></thead>
+            <tbody>
+            <tr th:each="s : ${staff}">
+                <td th:text="${s.username()}">staff1</td>
+                <td><span class="badge" th:text="${s.enabled()} ? 'Active' : 'Disabled'"
+                          th:classappend="${s.enabled()} ? 'text-bg-success' : 'text-bg-secondary'">Active</span></td>
+                <td th:text="${s.mustChange()} ? 'Temporary (must change)' : 'Set by user'">Set by user</td>
+                <td th:text="${s.createdOn()}">date</td>
+                <td>
+                    <div class="d-flex flex-wrap gap-1">
+                        <a class="btn btn-sm btn-outline-teal" th:href="@{/admin/users/{id}/reset(id=${s.id()})}"
+                           th:attr="aria-label='Reset password for ' + ${s.username()}">Reset password</a>
+                        <form th:if="${s.enabled()}" method="post"
+                              th:action="@{/admin/users/{id}/disable(id=${s.id()})}"
+                              data-confirm="Disable this account? They will not be able to sign in.">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Disable</button>
+                        </form>
+                        <form th:unless="${s.enabled()}" method="post"
+                              th:action="@{/admin/users/{id}/enable(id=${s.id()})}">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Enable</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<th:block th:replace="~{fragments/admin-layout :: adminScripts}"></th:block>
+</body>
+</html>

@@ -1,30 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/admin-layout :: adminHead('Dashboard')}"></head>
+
 <body>
-<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
-<main id="main" class="container section-pad">
-    <h1 class="h3">Dashboard</h1>
-    <p>Signed in as <strong th:text="${adminName}">admin</strong></p>
+	<header th:replace="~{fragments/admin-layout :: adminNav}"></header>
+	<main id="main" class="container section-pad">
+		<h1 class="h3">Dashboard</h1>
+		<div th:if="${message}" class="alert alert-success" role="status" th:text="${message}"></div>
+		<p>Signed in as <strong th:text="${adminName}">admin</strong></p>
 
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Total requests</div><div class="h3 mb-0" th:text="${stats.total()}">0</div></div></div>
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Pending</div><div class="h3 mb-0" th:text="${stats.pending()}">0</div></div></div>
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Confirmed</div><div class="h3 mb-0" th:text="${stats.confirmed()}">0</div></div></div>
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Rejected</div><div class="h3 mb-0" th:text="${stats.rejected()}">0</div></div></div>
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Cancelled</div><div class="h3 mb-0" th:text="${stats.cancelled()}">0</div></div></div>
-        <div class="col-6 col-md-4 col-lg-2"><div class="card card-soft p-3">
-            <div class="small">Upcoming confirmed</div><div class="h3 mb-0" th:text="${stats.upcomingConfirmed()}">0</div></div></div>
-    </div>
+		<div class="row g-3 mb-4">
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Total requests</div>
+					<div class="h3 mb-0" th:text="${stats.total()}">0</div>
+				</div>
+			</div>
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Pending</div>
+					<div class="h3 mb-0" th:text="${stats.pending()}">0</div>
+				</div>
+			</div>
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Confirmed</div>
+					<div class="h3 mb-0" th:text="${stats.confirmed()}">0</div>
+				</div>
+			</div>
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Rejected</div>
+					<div class="h3 mb-0" th:text="${stats.rejected()}">0</div>
+				</div>
+			</div>
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Cancelled</div>
+					<div class="h3 mb-0" th:text="${stats.cancelled()}">0</div>
+				</div>
+			</div>
+			<div class="col-6 col-md-4 col-lg-2">
+				<div class="card card-soft p-3">
+					<div class="small">Upcoming confirmed</div>
+					<div class="h3 mb-0" th:text="${stats.upcomingConfirmed()}">0</div>
+				</div>
+			</div>
+		</div>
 
-    <a class="btn btn-teal" th:href="@{/admin/appointments(status='PENDING')}">Review pending requests</a>
-    <a class="btn btn-outline-teal ms-2" th:href="@{/admin/appointments}">All appointments</a>
-</main>
-<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+		<a class="btn btn-teal" th:href="@{/admin/appointments(status='PENDING')}">Review pending requests</a>
+		<a class="btn btn-outline-teal ms-2" th:href="@{/admin/appointments}">All appointments</a>
+		<a class="btn btn-teal ms-2" th:href="@{/admin/patients}">Patients</a>
+		<a class="btn btn-outline-teal ms-2" th:href="@{/admin/users}">Staff accounts</a>
+	</main>
+	<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
 </body>
+
 </html>
