@@ -18,12 +18,15 @@ public class GlobalModelAttributes {
     private final SettingsService settingsService;
     private final HospitalProperties properties;
     private final String baseUrl;
+    private final boolean demo;
 
     public GlobalModelAttributes(SettingsService settingsService, HospitalProperties properties,
-                                 @Value("${site.base-url:http://localhost:8080}") String baseUrl) {
+                                 @Value("${site.base-url:http://localhost:8080}") String baseUrl,
+                                 @Value("${site.demo:false}") boolean demo) {
         this.settingsService = settingsService;
         this.properties = properties;
         this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+        this.demo = demo;
     }
 
     @ModelAttribute("hospital")
@@ -31,7 +34,6 @@ public class GlobalModelAttributes {
         try {
             return settingsService.current();
         } catch (RuntimeException ex) {
-            // Keeps error pages working even if the database is unavailable
             log.warn("Hospital settings unavailable; using defaults");
             return new HospitalInfo(properties.getName(), properties.getPhoneDisplay(),
                     properties.getPhoneLink(), properties.getEmail(), properties.getAddress(),
@@ -49,17 +51,23 @@ public class GlobalModelAttributes {
         return baseUrl;
     }
 
+    @ModelAttribute("demo")
+    public boolean demo() {
+        return demo;
+    }
+
+    @ModelAttribute("isAdmin")
+    public boolean isAdmin(HttpServletRequest request) {
+        return request.isUserInRole("ADMIN");
+    }
+
     @ModelAttribute("canonicalUrl")
     public String canonicalUrl(HttpServletRequest request) {
-        return baseUrl + request.getRequestURI(); // path only: query strings are never canonical
+        return baseUrl + request.getRequestURI();
     }
 
     @ModelAttribute("currentPath")
     public String currentPath(HttpServletRequest request) {
         return request.getRequestURI();
-    }
-    @ModelAttribute("isAdmin")
-    public boolean isAdmin(HttpServletRequest request) {
-        return request.isUserInRole("ADMIN");
     }
 }
